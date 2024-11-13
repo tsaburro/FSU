@@ -9,6 +9,7 @@
 import numpy as np
 from numpy import random
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 import math
 import time
 
@@ -19,7 +20,7 @@ def monte_carlo():
     start_time = time.time()
 
     # define the number of points for the test
-    num_points = 1000
+    num_points = 100000
     
     # create some data to track trade-offs later
     point_range = []
@@ -27,7 +28,7 @@ def monte_carlo():
     time_range = []
     approx_range = []
 
-    for i in range(num_points):
+    for i in range(0, num_points, 10):
         # define x any y, creating a circular coordinate system for random points
         x = np.random.uniform(-1, 1, num_points)
         y = np.random.uniform(-1, 1, num_points)
@@ -81,42 +82,48 @@ def monte_carlo():
 # === === === === === === === === === === === === === === === === === #
 
     ## Visualization of Error and Speed Trade-off
+    btr = LinearSegmentedColormap.from_list("BlackRed", ["black", "red"])
+    colorway = btr(np.linspace(0, 1, len(point_range)))
     plt.figure(figsize=(12, 6))
+    
 
     # plotting the error vs number of points
     plt.subplot(1, 3, 1)
-    plt.plot(point_range, error_range, marker='', color='blue', linestyle='-', label='Error')
+    #plt.plot(point_range, error_range, marker='', color='blue', linestyle='-', label='Error')
+    plt.scatter(point_range, error_range, color=colorway,s=3)
     plt.title("Error vs Number of Points")
     plt.xlabel("Number of Points")
     plt.ylabel("Error")
     plt.yscale('log')
     plt.xscale('log')
     plt.grid(True)
-    plt.legend()
+    #plt.legend()
 
     # plotting the time vs number of points
     plt.subplot(1, 3, 2)
-    plt.plot(point_range, time_range, marker='', color='blue', linestyle='-', label='Time')
+    #plt.plot(point_range, time_range, marker='', color='blue', linestyle='-', label='Time')
+    plt.scatter(point_range, time_range, color='black',s=3)
     plt.title("Time vs Number of Points")
     plt.xlabel("Number of Points")
     plt.ylabel("Time (seconds)")
     plt.grid(True)
-    plt.legend()
+    #plt.legend()
 
     # plotting the approximation vs number of points
     plt.subplot(1, 3, 3)
-    plt.plot(point_range, approx_range, marker='', color='blue', linestyle='-', label='Approximation')
+    #plt.plot(point_range, approx_range, marker='', color='blue', linestyle='-', label='Approximation')
+    plt.scatter(point_range, approx_range, color=colorway,s=3)
     plt.title("Approximation vs Number of Points")
     plt.xlabel("Number of Points")
     plt.ylabel("Approximation")
     plt.grid(True)
-    plt.legend()
+    #plt.legend()
 
     plt.tight_layout()
     plt.show()
 
     return 
-monte_carlo()
+#$$$# monte_carlo()
 
 # --------------------------------------------------------------------------- #
 ## Technique - 2 / Numerical Integration Approximation
