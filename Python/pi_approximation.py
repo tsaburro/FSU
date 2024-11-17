@@ -1,5 +1,5 @@
 # Course: Numerical Analysis / MAD3703
-# Project: Comparing Monte Carlo Approximation and Numerical Integration Approximation of π.
+# Project: Comparing Monte Carlo Approximation and Trapezoidal Rule Approximation of π.
 # Name: Tyler Boshaw
 # Draft Due Date: Nov 22, 2024
 # Final Due Date: Dec 6, 2024
@@ -28,7 +28,7 @@ def monte_carlo():
     time_range = []
     approx_range = []
 
-    for i in range(0, num_points, 10):
+    for i in range(0, num_points, 100):
         # define x any y, creating a circular coordinate system for random points
         x = np.random.uniform(-1, 1, num_points)
         y = np.random.uniform(-1, 1, num_points)
@@ -58,7 +58,7 @@ def monte_carlo():
     print(f"Speed of Approximation: {duration} seconds")
     print(f"Error of Approximation: {error}")
 
-# === === === === === === === === === === === === === === === === === #
+    # === === === === === === === === === === === === === === === === === #
 
     ## Visualization of Approximation
     # create a plot for the data points to visual the approximation
@@ -79,7 +79,7 @@ def monte_carlo():
     plt.ylabel("y")
     plt.show()
     
-# === === === === === === === === === === === === === === === === === #
+    # === === === === === === === === === === === === === === === === === #
 
     ## Visualization of Error and Speed Trade-off
     btr = LinearSegmentedColormap.from_list("BlackRed", ["black", "red"])
@@ -123,21 +123,127 @@ def monte_carlo():
     plt.show()
 
     return 
-#$$$# monte_carlo()
 
 # --------------------------------------------------------------------------- #
-## Technique - 2 / Numerical Integration Approximation
-def num_int():
-    print("TEST")
+## Technique - 2 / Trapezoid Rule Approximation
+def function(x):
+    # define a function to integrate
+    func = np.sqrt(np.clip(1 - x**2, 0, None))
 
+    return func
 
+def trap_rule():
+    # start time (for measuring speed of approximation)
+    start_time = time.time()
 
+    # create some data to track trade-offs later
+    point_range = []
+    error_range = []
+    time_range = []
+    approx_range = []
 
-## Visualization of Approximation
+    # define number of intervals (should ultimately determine accuracy)
+    num_points = 1000
 
+    for i in range(0, num_points, 10):
 
+        # define bounds for integration
+        b = math.pi
+        a = 0
 
+        ## trapezoidal rule algorithm
 
-## Visualization of Error and Speed Trade-off
+        # interval generation
+        x = np.linspace(a, b, num_points)
+        # evaluating the function at each subinterval point
+        y = function(x)
+        # step size calculation
+        h = (b - a) / (num_points - 1) 
+        # approximate the function using the trapezoidal rule
+        trap = (h / 2) * (y[0] + 2 * np.sum(y[1:-1] + y[-1]))
 
+        # approximate PI
+        approx = 4 * trap
+
+        # calculate error to math.pi
+        error = abs(math.pi - approx)
+
+        # calculate the time taken for approximation
+        end_time = time.time()
+        duration = end_time - start_time
+
+        # append info for trade-offs
+        point_range.append(i)
+        error_range.append(error)
+        time_range.append(duration)
+        approx_range.append(approx)
+    
+    print(f"Trapezoidal Rule Approximation of π with {num_points} points: {approx}")
+    print(f"Speed of Approximation: {duration} seconds")
+    print(f"Error of Approximation: {error}")
+    
+    # === === === === === === === === === === === === === === === === === #
+
+    ## Visualization of Error and Speed Trade-off
+    btr = LinearSegmentedColormap.from_list("BlackRed", ["black", "red"])
+    colorway = btr(np.linspace(0, 1, len(point_range)))
+    plt.figure(figsize=(12, 6))
+    
+    # plotting the error vs number of points
+    plt.subplot(1, 3, 1)
+    #plt.plot(point_range, error_range, marker='', color='blue', linestyle='-', label='Error')
+    plt.scatter(point_range, error_range, color=colorway,s=3)
+    plt.title("Error vs Number of Points")
+    plt.xlabel("Number of Points")
+    plt.ylabel("Error")
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.grid(True)
+    #plt.legend()
+
+    # plotting the time vs number of points
+    plt.subplot(1, 3, 2)
+    #plt.plot(point_range, time_range, marker='', color='blue', linestyle='-', label='Time')
+    plt.scatter(point_range, time_range, color='black',s=3)
+    plt.title("Time vs Number of Points")
+    plt.xlabel("Number of Points")
+    plt.ylabel("Time (seconds)")
+    plt.grid(True)
+    #plt.legend()
+
+    # plotting the approximation vs number of points
+    plt.subplot(1, 3, 3)
+    #plt.plot(point_range, approx_range, marker='', color='blue', linestyle='-', label='Approximation')
+    plt.scatter(point_range, approx_range, color=colorway,s=3)
+    plt.title("Approximation vs Number of Points")
+    plt.xlabel("Number of Points")
+    plt.ylabel("Approximation")
+    plt.grid(True)
+    #plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+    return 
+
+# --------------------------------------------------------------------------- #
+## Main Menu
+def main():
+    # menu for choosing method to run
+    print(" -- Please choose an algorithm to approximate PI -- ")
+    print(" >> a) Monte Carlo Method")
+    print(" >> b) Trapezoidal Rule Integration")
+    choice = input(">> ")
+
+    if (choice == "a" or choice == "A"):
+        print("// Processing //")
+        monte_carlo()
+    elif (choice == "b" or choice == "B"):
+        print("// Processing //")
+        trap_rule()
+    else:
+        print("###/ ERROR: Please select a valid option /###")
+        main()
+
+main()
 # --------------------------------------------------------------------------- #
