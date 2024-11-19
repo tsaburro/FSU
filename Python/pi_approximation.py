@@ -28,7 +28,7 @@ def monte_carlo():
     time_range = []
     approx_range = []
 
-    for i in range(0, num_points, 100):
+    for i in range(0, num_points, 1):
         # define x any y, creating a circular coordinate system for random points
         x = np.random.uniform(-1, 1, num_points)
         y = np.random.uniform(-1, 1, num_points)
@@ -129,7 +129,7 @@ def monte_carlo():
 def function(x):
     # define a function to integrate
     func = np.sqrt(np.clip(1 - x**2, 0, None))
-
+ 
     return func
 
 def trap_rule():
@@ -145,7 +145,7 @@ def trap_rule():
     # define number of intervals (should ultimately determine accuracy)
     num_points = 1000
 
-    for i in range(0, num_points, 10):
+    for i in range(2, num_points, 1):
 
         # define bounds for integration
         b = math.pi
@@ -158,7 +158,7 @@ def trap_rule():
         # evaluating the function at each subinterval point
         y = function(x)
         # step size calculation
-        h = (b - a) / (num_points - 1) 
+        h = (b - a) / (i - 1) 
         # approximate the function using the trapezoidal rule
         trap = (h / 2) * (y[0] + 2 * np.sum(y[1:-1] + y[-1]))
 
@@ -181,7 +181,7 @@ def trap_rule():
     print(f"Trapezoidal Rule Approximation of π with {num_points} points: {approx}")
     print(f"Speed of Approximation: {duration} seconds")
     print(f"Error of Approximation: {error}")
-    
+
     # === === === === === === === === === === === === === === === === === #
 
     ## Visualization of Error and Speed Trade-off
