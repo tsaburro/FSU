@@ -30,10 +30,13 @@ def monte_carlo():
 
     for i in range(0, num_points, 1):
         # define x any y, creating a circular coordinate system for random points
+        # x and y are give "num_points" random values, and these points are then
+        # distributed within a square region with x and y coordinates within [-1,1]
         x = np.random.uniform(-1, 1, num_points)
         y = np.random.uniform(-1, 1, num_points)
 
         # distinguish the points inside the circular region
+        # take sum of the inside points for approximation
         bound = ((x**2 + y**2) <= 1)
         inside = np.sum(bound)
 
@@ -47,7 +50,7 @@ def monte_carlo():
         end_time = time.time()
         duration = end_time - start_time
 
-        # append info for trade-offs
+        # append info for trade-offs (similar to .pushback in C++)
         point_range.append(i)
         error_range.append(error)
         time_range.append(duration)
@@ -82,6 +85,7 @@ def monte_carlo():
     # === === === === === === === === === === === === === === === === === #
 
     ## Visualization of Error and Speed Trade-off
+    # I made my own color heatmap, so yeah this is what this is below
     btr = LinearSegmentedColormap.from_list("BlackRed", ["black", "red"])
     colorway = btr(np.linspace(0, 1, len(point_range)))
     plt.figure(figsize=(12, 6))
@@ -152,7 +156,6 @@ def trap_rule():
         a = 0
 
         ## trapezoidal rule algorithm
-
         # interval generation
         x = np.linspace(a, b, num_points)
         # evaluating the function at each subinterval point
@@ -172,12 +175,13 @@ def trap_rule():
         end_time = time.time()
         duration = end_time - start_time
 
-        # append info for trade-offs
+        # append info for trade-offs (similar to .pushback in C++)
         point_range.append(i)
         error_range.append(error)
         time_range.append(duration)
         approx_range.append(approx)
     
+    # results with speed
     print(f"Trapezoidal Rule Approximation of π with {num_points} points: {approx}")
     print(f"Speed of Approximation: {duration} seconds")
     print(f"Error of Approximation: {error}")
@@ -185,6 +189,7 @@ def trap_rule():
     # === === === === === === === === === === === === === === === === === #
 
     ## Visualization of Error and Speed Trade-off
+    # same personal color heatmap I made earlier
     btr = LinearSegmentedColormap.from_list("BlackRed", ["black", "red"])
     colorway = btr(np.linspace(0, 1, len(point_range)))
     plt.figure(figsize=(12, 6))
@@ -235,6 +240,7 @@ def main():
     print(" >> b) Trapezoidal Rule Integration")
     choice = input(">> ")
 
+    # choice selection for menu
     if (choice == "a" or choice == "A"):
         print("// Processing //")
         monte_carlo()
